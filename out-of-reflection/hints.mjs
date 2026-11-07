@@ -1,5 +1,8 @@
 // Clues suggest where or how to look without naming the changed detail.
 export const clues={
+ clock:'Do both views agree on the time?',
+ picture:'Look again at the picture above the sofa.',
+ cushion:'Compare the fabric details on the sofa.',
  flower:'Look closely at what sits on the coffee table.',
  lamp:'Compare the taller shapes beside the sofa.',
  plant:'Does the little green corner look equally lively in both views?',

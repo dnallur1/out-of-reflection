@@ -1,5 +1,5 @@
-import {polishRoom} from './art-details.js?v=rounded-rooms-1';
-import {otherRoom,otherObjects} from './other-rooms.js?v=rounded-rooms-1';
+import {polishRoom} from './art-details.js?v=shifting-living-1';
+import {otherRoom,otherObjects} from './other-rooms.js?v=shifting-living-1';
 export const objects={
  lowerPicture:{name:'lower right picture',x:568,y:211,w:98,h:55},
  curtains:{name:'window curtains',x:218,y:154,w:40,h:268},
@@ -14,7 +14,7 @@ export const objects={
  cushion:{name:'sofa cushion',x:332,y:300,w:100,h:95},
  mug:{name:'mug',x:186,y:351,w:55,h:55}
 };
-export function roomObjects(scene){return otherObjects[scene] || Object.fromEntries(['flower','lamp','plant'].map(key=>[key,objects[key]]));}
+export function roomObjects(scene){return otherObjects[scene] || Object.fromEntries(['flower','lamp','plant','clock','picture','cushion'].map(key=>[key,objects[key]]));}
 export function drawRoom(s, colourProgress = 0, colourStep = 1/15){let svg = s.scene && s.scene!=='living' ? otherRoom(s) : `<svg class="room-art" viewBox="0 0 800 520" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Illustrated sitting room: left window and plant table, central cartoon sofa, clock and four pictures, four right shelves, oval rug and coffee table, floor lamp"><defs><pattern id="stripes" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#f7d777"/><path d="M0 0V14" stroke="#d887a3" stroke-width="5"/></pattern><pattern id="woven" width="12" height="8" patternUnits="userSpaceOnUse"><path d="M1 4H5M8 1V3M8 6V8" stroke="#365650" stroke-width=".7" fill="none"/></pattern><pattern id="diamonds" width="40" height="24" patternUnits="userSpaceOnUse"><path d="M20 1L38 12L20 23L2 12Z" fill="none" stroke="#365650" stroke-width="1.5"/></pattern></defs>
 <rect width="800" height="520" fill="#fff1cf"/><path d="M0 360Q400 350 800 359V520H0Z" fill="#e2bc86"/>
 <g fill="none" stroke="#c79569" stroke-width="2"><path d="M0 414H800M0 474H800M113 360L68 520M271 357L256 520M539 358L559 520M691 359L758 520"/></g>
