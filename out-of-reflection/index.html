@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f6f1e7"><title>Out of Reflection — Play</title><link rel="stylesheet" href="style.css?v=clean-found-1"></head>
+<body>
+<main class="page">
+<header class="masthead"><div><p class="eyebrow">AN OBSERVATION GAME · HALLUCINATION</p><h1>Out of <em>Reflection</em></h1><p class="tagline">The clearer it becomes, the less you trust it.</p></div><button id="sound" class="quiet" aria-pressed="false">Sound off</button></header>
+<div class="game-layout">
+<aside class="instructions" aria-label="Instructions and hints"><p class="eyebrow" id="stage-number">01 / NOTICE</p><h2 id="stage-title">Look, then look again.</h2><p id="stage-copy">Find large differences between the room and its reflection. You can select either view.</p><button id="hint" class="hint-button" disabled>Show a hint <span>↗</span></button><p id="hint-text" class="hint-text" role="status" aria-live="polite">Need a nudge? Ask for a short clue.</p><details class="help-details"><summary>How to play</summary><ol><li>Compare the two views. Mirror reversal is normal.</li><li>Select a mismatch in either view.</li><li>Find 3 differences in the living room, 5 in the kitchen and 7 in the bedroom. Complete each room, then select Continue to enter the next.</li></ol><div class="rule-note"><span>YOUR PROGRESS STAYS.</span><p>A wrong click costs nothing. Take as long as you need.</p></div><p class="keyboard-note">Keyboard: Tab to an object, Enter or Space to select it.</p></details><div id="final-note" hidden><h3>Your room remains.</h3><p>You can compare the final views or restart to play again.</p></div></aside>
+<section class="play-area" aria-label="Game">
+
+<div class="dashboard"><div class="metric"><span>Score</span><strong id="score">0</strong></div><div class="metric"><span>Level</span><strong id="level">1 <small>/ 3</small></strong></div><div class="metric progress-metric"><span>Differences found</span><strong id="progress-label">0 / 3</strong><progress id="progress" max="3" value="0" aria-label="Differences found in this room"></progress></div><button id="restart" class="quiet">Restart ↺</button></div>
+<div id="board" class="board" aria-label="Room and reflection comparison board">
+<section class="scene-panel"><h2>The room <span>compare & select</span></h2><div class="scene" id="room"></div></section>
+<section class="scene-panel mirror-panel"><h2>The reflection <span>look closely</span></h2><div class="scene" id="mirror"></div></section>
+<div id="opening" class="overlay"><div class="dialog"><p class="eyebrow">LOOK CLOSELY. TRUST YOUR EYES?</p><h2>Something doesn't belong.</h2><p>Compare the room with its reflection. Click or tap an object in either view that doesn't match.</p><p>Each scene begins in black and white. Every discovery restores some colour and brings the reflection into focus. Keep looking—things may not be as you remember.</p><button id="begin" class="primary">Start game <span>→</span></button></div></div>
+<div id="ending" class="overlay" hidden><div class="dialog"><p class="eyebrow">FIFTEEN DISCOVERIES · ONE CHANGED ROOM</p><h2>All three rooms complete!</h2><p>Your reflection is sharp and the room is full of colour. Your selections have changed the room you began with.</p><p id="ending-details"></p><button id="inspect" class="primary">See your room →</button><button id="replay" class="quiet">Play again</button></div></div>
+</div>
+<section id="stage-complete" class="stage-complete" aria-labelledby="complete-title" hidden><div><h2 id="complete-title"></h2><p id="complete-copy"></p></div><button id="continue" class="primary">Continue to next room →</button></section>
+<p id="status" class="status" role="status" aria-live="polite">Begin when you're ready. There is no timer.</p>
+</section>
+
+</div><footer>NOTICE <span>→</span> EXPLORE <span>→</span> RECONSIDER <span class="footer-end">A small experiment in perception.</span></footer>
+</main><script type="module" src="app.js?v=rounded-rooms-1"></script>
+</body></html>
