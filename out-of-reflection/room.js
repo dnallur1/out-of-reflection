@@ -1,5 +1,5 @@
-import {polishRoom} from './art-details.js?v=shifting-living-1';
-import {otherRoom,otherObjects} from './other-rooms.js?v=shifting-living-1';
+import {polishRoom} from './art-details.js?v=chances-1';
+import {otherRoom,otherObjects} from './other-rooms.js?v=chances-1';
 export const objects={
  lowerPicture:{name:'lower right picture',x:568,y:211,w:98,h:55},
  curtains:{name:'window curtains',x:218,y:154,w:40,h:268},

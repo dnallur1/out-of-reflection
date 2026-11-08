@@ -11,9 +11,10 @@ export const stages = [
 export const LIVING_ROUNDS=[['flower','lamp','plant'],['clock','picture'],['cushion']];
 export const STAGE_COUNTS=stages.map((stage,index)=>index===0?LIVING_ROUNDS.length:Object.keys(stage).length);
 export const STAGE_STARTS=STAGE_COUNTS.map((_,index)=>STAGE_COUNTS.slice(0,index).reduce((a,b)=>a+b,0));
+export const WRONG_ALLOWANCE=2;
 export const TOTAL=STAGE_COUNTS.reduce((a,b)=>a+b,0);
 export function stageProgress(state){return state.found-STAGE_STARTS[stageIndex(state)];}
-export function initialState(){return {started:false,stage:0,found:0,score:0,room:{...baseline},choices:[],stageFound:[]};}
+export function initialState(){return {started:false,mistakes:0,failed:false,stage:0,found:0,score:0,room:{...baseline},choices:[],stageFound:[]};}
 export function stageIndex(state){return state.stage;}
 export function remaining(state){
  if(state.found===TOTAL)return [];
@@ -22,14 +23,24 @@ export function remaining(state){
 }
 export function reflected(state){const image={...state.room};for(const key of remaining(state))image[key]=stages[stageIndex(state)][key];return image;}
 export function select(state,key){
- if(!state.started||!remaining(state).includes(key))return {state,correct:false};
+ if(!state.started||state.failed||stageProgress(state)===STAGE_COUNTS[state.stage]||state.stageFound.includes(key))return {state,correct:false,penalty:false};
+ if(!remaining(state).includes(key)){
+  const mistakes=state.mistakes+1;
+  return {state:{...state,mistakes,failed:mistakes>WRONG_ALLOWANCE},correct:false,penalty:true};
+ }
  const next={...state,room:{...state.room},choices:[...state.choices,key],stageFound:[...state.stageFound,key],found:state.found+1,score:state.score+100};
  if(stageIndex(state)===2)next.room[key]=stages[2][key];
  return {state:next,correct:true};
 }
 
 export function advance(state){
- if(!state.started||state.stage===stages.length-1||state.stageFound.length!==STAGE_COUNTS[state.stage])return state;
+ if(!state.started||state.failed||state.stage===stages.length-1||state.stageFound.length!==STAGE_COUNTS[state.stage])return state;
  const stage=state.stage+1;
- return {...state,stage,stageFound:[],room:{...roomBaselines[stage]}};
+ return {...state,stage,mistakes:0,failed:false,stageFound:[],room:{...roomBaselines[stage]}};
+}
+
+export function retryRoom(state){
+ if(!state.started)return state;
+ const found=STAGE_STARTS[state.stage];
+ return {...state,found,score:found*100,choices:state.choices.slice(0,found),stageFound:[],mistakes:0,failed:false,room:{...roomBaselines[state.stage]}};
 }

@@ -1,7 +1,7 @@
 import {clues} from './hints.mjs';
 import assert from 'node:assert/strict';
 import {drawRoom,roomObjects} from './room.js';
-import {roomBaselines,initialState,reflected,stages,remaining,stageIndex,stageProgress,select,TOTAL,STAGE_COUNTS,advance} from './game-state.mjs';
+import {roomBaselines,initialState,reflected,stages,remaining,stageIndex,stageProgress,select,TOTAL,STAGE_COUNTS,advance,retryRoom} from './game-state.mjs';
 assert.deepEqual(STAGE_COUNTS,[3,5,7]);assert.equal(TOTAL,15);
 const seen=new Set();
 for(const [index,stage] of stages.entries()){
@@ -49,3 +49,27 @@ assert.equal(select(initialState(),'flower').correct,false);
 walk({...initialState(),started:true});
 assert.deepEqual(initialState().stageFound,[]);
 console.log(`PASS: shifting level-1 mismatches, 3/5/7 targets and explicit Continue gates; ${visited.size} reachable states and ${edges} transitions covering all 3,628,800 discovery orders; distinct artwork and valid hit areas; duplicate prevention; 15 finds, score 1500, matching final room.`);
+
+// Each room permits two mistakes, then locks until that room is retried.
+for(let stage=0;stage<3;stage++){
+ let state={...initialState(),started:true};
+ while(state.stage<stage){while(remaining(state).length)state=select(state,remaining(state)[0]).state;state=advance(state);}
+ const savedFound=state.found,savedChoices=[...state.choices];
+ state=select(state,remaining(state)[0]).state;
+ const progress=state.found;
+ for(let mistake=1;mistake<=3;mistake++){
+  const result=select(state,null);assert(result.penalty);state=result.state;
+  assert.equal(state.mistakes,mistake);assert.equal(state.failed,mistake===3);
+  assert.equal(state.found,progress);assert.equal(state.score,progress*100);
+ }
+ assert.equal(select(state,remaining(state)[0]).state,state,'Failed room cannot score');
+ assert.equal(advance(state),state,'Failed room cannot advance');
+ state=retryRoom(state);
+ assert.equal(state.stage,stage);assert.equal(state.found,savedFound);assert.equal(state.score,savedFound*100);
+ assert.deepEqual(state.choices,savedChoices);assert.equal(state.mistakes,0);assert.equal(state.failed,false);
+ assert.deepEqual(state.room,roomBaselines[stage]);
+ state=select(state,null).state;
+ while(remaining(state).length)state=select(state,remaining(state)[0]).state;
+ if(stage<2){state=advance(state);assert.equal(state.mistakes,0);assert.equal(state.failed,false);}
+}
+console.log('PASS: two extra mistakes in every room; third mistake locks; retry preserves completed rooms and resets current-room colour, score, differences and chances; next room restores chances.');

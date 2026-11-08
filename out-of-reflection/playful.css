@@ -70,3 +70,39 @@ footer{border-top:1.5px dashed #d5cada;color:#8a7b94;font-size:8px;letter-spacin
  .help-details[open]{justify-self:stretch}
  .board:has(.overlay:not([hidden])){min-height:360px}
 }
+
+/* Local prototype: limited extra chances, clear feedback and room-only retry. */
+.mistake-meter{padding:0 16px;border-left:1px solid #cfc3db;display:flex;flex-direction:column;gap:1px;margin-right:16px;white-space:nowrap}
+.mistake-meter>span{font-size:8px;letter-spacing:1px;text-transform:uppercase;font-weight:700;color:#746780}
+.mistake-meter strong{font-size:20px;line-height:1.2;font-variant-numeric:tabular-nums}
+.mistake-meter.is-low strong{color:#a63f36}
+.mistake-alert{margin:0 0 12px;padding:10px 14px;border:2px solid #ac4a3c;border-radius:12px;background:#ffebe0;color:#7d3228;font-size:12px;font-weight:700;line-height:1.5}
+.retry-overlay .eyebrow{color:#a34437}.retry-overlay .primary{background:#f5bd9b}
+.target.wrong{animation:wrong-wiggle .35s ease-in-out;border:3px dashed #a34437;background:#ffc7b166;opacity:1}
+@keyframes wrong-wiggle{0%,100%{transform:translate(-50%,-50%)}25%{transform:translate(calc(-50% - 4px),-50%)}75%{transform:translate(calc(-50% + 4px),-50%)}}
+@media(max-width:600px){.dashboard{flex-wrap:wrap;row-gap:9px}.progress-metric{min-width:110px}.mistake-meter{order:4;flex:1;flex-direction:row;align-items:center;gap:10px;border:0;border-top:1px dashed #cfc3db;padding:6px 0 0;margin:0}.mistake-meter strong{font-size:15px}.dashboard .quiet{order:5;margin-top:5px}.mistake-alert{font-size:11px;padding:8px 10px}.retry-overlay .dialog h2{font-size:23px}}
+@media(max-width:600px){
+ .dashboard{display:grid;grid-template-columns:52px 52px minmax(0,1fr) 60px;column-gap:0;row-gap:7px}
+ .dashboard>.metric:nth-child(1){grid-column:1;grid-row:1}
+ .dashboard>.metric:nth-child(2){grid-column:2;grid-row:1}
+ .dashboard>.progress-metric{grid-column:3 / -1;grid-row:1;min-width:0}
+ .dashboard .mistake-meter{grid-column:1 / 4;grid-row:2;padding:6px 0 0;align-self:stretch}
+ .dashboard #restart{grid-column:4;grid-row:2;margin:0;align-self:end}
+}
+
+/* Help lives in the top layer: opening it never changes the board geometry. */
+.help-trigger{grid-row:1;grid-column:3;justify-self:end;min-height:30px;padding:3px 9px;border:1px dashed #95889f;border-radius:9px;background:transparent;color:var(--ink);font-size:11px;font-weight:700}
+.help-trigger:hover{background:var(--lilac)}
+.help-modal{width:min(470px,calc(100vw - 32px));max-height:calc(100dvh - 48px);margin:auto;padding:26px 28px;border:2px solid var(--ink);border-radius:20px;background:var(--paper);color:var(--ink);box-shadow:6px 7px 0 #29263c40;overflow:auto;font-family:'Trebuchet MS',Arial,sans-serif}
+.help-modal::backdrop{background:#29263c66;backdrop-filter:blur(2px)}
+.help-modal .eyebrow{font-size:9px;color:#76608c;letter-spacing:1.3px;margin:0 0 8px}
+.help-modal h2{font-size:28px;letter-spacing:-1px;line-height:1.1;margin:0 0 18px}
+.help-modal ol{padding-left:22px;margin:0 0 18px;font-size:14px;line-height:1.6}
+.help-modal li{padding:4px 0 4px 4px}
+.help-modal li::marker{font-weight:800;color:var(--accent)}
+.help-modal .rule-note{border:0;background:#ede6f4;padding:13px;border-radius:12px;margin:0 0 14px}
+.help-modal .rule-note span{font-size:10px;font-weight:800;letter-spacing:1px}
+.help-modal .rule-note p{margin:5px 0 0;font-size:13px;line-height:1.6}
+.help-modal .keyboard-note{font-size:11px;color:var(--muted);line-height:1.6;margin:0}
+.help-modal form{margin:16px 0 0}.help-modal .primary{width:100%;justify-content:center;margin:0}
+@media(max-width:600px){.help-trigger{grid-column:2;grid-row:1}.help-modal{padding:22px 20px}.help-modal h2{font-size:25px}.help-modal ol{font-size:13px}}
