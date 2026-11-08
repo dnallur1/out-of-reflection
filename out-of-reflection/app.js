@@ -17,6 +17,11 @@ function render(){
  for(const view of ['room','mirror'])for(const [key,o] of Object.entries(objects)){
  const b=document.createElement('button');b.className='target';b.dataset.object=key;b.setAttribute('aria-label',`Inspect ${view==='mirror'?'reflected':'room'} ${o.name}`);b.style.left=`${view==='mirror'?100-o.x/8:o.x/8}%`;b.style.top=`${o.y/5.2}%`;b.style.setProperty('--width',`${o.w/8}%`);b.style.setProperty('--height',`${o.h/5.2}%`);b.disabled=!state.started||roomComplete()||busy||state.stageFound.includes(key);if(state.stageFound.includes(key))b.classList.add('resolved');b.addEventListener('click',()=>clickObject(key,view));$(view).append(b);
  }
+ for(const item of document.querySelectorAll('.journey li')){
+ const index=Number(item.dataset.stage),current=index===stageIndex(state);
+ item.classList.toggle('is-current',current);item.classList.toggle('is-done',index<stageIndex(state)||state.found===TOTAL);
+ if(current)item.setAttribute('aria-current','step');else item.removeAttribute('aria-current');
+ }
  $('score').textContent=state.score;
  const level=stageIndex(state)+1,within=stageProgress(state),target=STAGE_COUNTS[level-1];
  $('level').innerHTML=`${level} <small>/ 3</small>`;$('progress-label').textContent=`${within} / ${target}`;$('progress').max=target;$('progress').value=within;
