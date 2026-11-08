@@ -1,5 +1,16 @@
 // Clues suggest where or how to look without naming the changed detail.
 export const clues={
+ kitchenSky:'Do both kitchen windows show the same time of day?',
+ utensil:'Compare the shapes hanging at the left end of the rail.',
+ cupHandles:'Look at how you would hold the cup on the lower shelf.',
+ stoveDial:'Compare the little controls along the cooker.',
+ rightBotanical:'Study the plant shapes inside the other framed drawing.',
+ windowStars:'Take a closer look at the night sky through the window.',
+ drapeDots:'Compare the fabric beside the bedroom window.',
+ headboard:'Look for small details just above the pillows.',
+ rugSpots:'Follow the pattern along the rug beside the bed.',
+ wardrobeBadge:'Look below the handles on the wardrobe.',
+
  clock:'Do both views agree on the time?',
  picture:'Look again at the picture above the sofa.',
  cushion:'Compare the fabric details on the sofa.',

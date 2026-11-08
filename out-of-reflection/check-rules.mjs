@@ -17,7 +17,7 @@ for(const [index,stage] of stages.entries()){
 // ordering without traversing equivalent states millions of times.
 const visited=new Set();let edges=0;
 function walk(state){
- const signature=JSON.stringify([state.stage,state.found,[...state.stageFound].sort()]);
+ const signature=JSON.stringify([state.stage,state.found,[...state.stageFound].sort(),state.active]);
  if(visited.has(signature))return;visited.add(signature);
  assert.equal(state.score,state.found*100);
  assert.equal(state.room.scene,roomBaselines[stageIndex(state)].scene);
@@ -35,12 +35,18 @@ function walk(state){
  for(const key of valid){
   const {state:next,correct}=select(state,key);edges++;assert(correct);
   assert.equal(next.found,state.found+1);assert.equal(select(next,key).correct,false);
+  assert.equal(select(next,key).penalty,false,'Found targets never use a chance');
   assert.equal(stageIndex(next),index,'Completion stays in current room until Continue');
   assert.equal(reflected(next)[key],next.room[key]);assert.equal(next.stageFound.length,state.stageFound.length+1);
-  if(index===0){
+  {
    const after=remaining(next);
    assert(valid.every(item=>!after.includes(item)),'Every old mismatch changes after a correct find');
    assert(valid.every(item=>reflected(next)[item]===next.room[item]),'Previous mismatches disappear');
+   if(after.length){
+    const oldUnfound=valid.find(item=>item!==key);
+    if(oldUnfound)assert.equal(select(next,oldUnfound).penalty,true,'A disappeared mismatch is now a wrong guess');
+    for(const active of after)assert.notEqual(reflected(next)[active],next.room[active],'Every new active target is a visible mismatch');
+   }
   }
   walk(next);
  }
@@ -48,7 +54,7 @@ function walk(state){
 assert.equal(select(initialState(),'flower').correct,false);
 walk({...initialState(),started:true});
 assert.deepEqual(initialState().stageFound,[]);
-console.log(`PASS: shifting level-1 mismatches, 3/5/7 targets and explicit Continue gates; ${visited.size} reachable states and ${edges} transitions covering all 3,628,800 discovery orders; distinct artwork and valid hit areas; duplicate prevention; 15 finds, score 1500, matching final room.`);
+console.log(`PASS: shifting mismatches in all three rooms, 3/5/7 targets and explicit Continue gates; ${visited.size} reachable states and ${edges} transitions covering all 3,628,800 discovery orders; distinct artwork and valid hit areas; duplicate prevention; 15 finds, score 1500, matching final room.`);
 
 // Each room permits two mistakes, then locks until that room is retried.
 for(let stage=0;stage<3;stage++){

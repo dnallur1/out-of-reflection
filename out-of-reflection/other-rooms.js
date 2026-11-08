@@ -1,6 +1,10 @@
 // Room-specific illustration and hit areas use the same 800 × 520 coordinate system.
 export const otherObjects={
  kitchen:{
+  kitchenSky:{name:'kitchen window sky',x:440,y:93,w:55,h:55},
+  utensil:{name:'left hanging utensil',x:75,y:217,w:34,h:52},
+  cupHandles:{name:'cup on the lower wall shelf',x:87,y:123,w:64,h:38},
+  stoveDial:{name:'right cooker dial',x:443,y:325,w:34,h:30},
   kettle:{name:'kettle',x:164,y:253,w:96,h:82},
   fruit:{name:'fruit bowl',x:580,y:287,w:116,h:76},
   towel:{name:'oven towel',x:374,y:395,w:80,h:80},
@@ -8,6 +12,12 @@ export const otherObjects={
   cabinet:{name:'upper cabinet door',x:690,y:136,w:88,h:156}
  },
  bedroom:{
+  rightBotanical:{name:'right botanical picture',x:469,y:102,w:84,h:104},
+  windowStars:{name:'bedroom window sky',x:691,y:94,w:58,h:70},
+  drapeDots:{name:'bedroom curtain pattern',x:583,y:98,w:38,h:96},
+  headboard:{name:'bed headboard',x:400,y:213,w:156,h:32},
+  rugSpots:{name:'bedroom rug pattern',x:401,y:492,w:380,h:28},
+  wardrobeBadge:{name:'wardrobe decoration',x:85,y:365,w:48,h:48},
   pillow:{name:'bed pillow',x:453,y:270,w:120,h:70},
   blanket:{name:'bedspread pattern',x:404,y:365,w:220,h:85},
   nightBook:{name:'bedside books',x:656,y:331,w:100,h:46},
@@ -29,8 +39,9 @@ ${kitchen?`
 <path d="M38 74Q148 69 264 74Q275 80 265 87Q150 92 38 87Q28 81 38 74ZM51 139Q150 135 257 139Q269 145 258 151Q154 156 51 151Q40 145 51 139Z" fill="#c69c78"/>
 <g fill="#f7f2df"><path d="M58 51Q70 47 82 51L80 70Q70 74 60 70ZM96 43Q107 39 119 43L117 70Q108 73 98 70ZM136 51Q148 47 160 51L158 70Q148 73 138 70Z"/><path d="M188 52Q206 45 224 52V72H188Z"/><path d="M72 115Q87 111 102 115L100 132Q88 141 74 132ZM141 109Q157 105 172 109L169 132Q155 140 144 132Z"/><path d="M104 118Q124 113 114 131H104M172 111Q191 108 182 127H172" fill="none"/></g>
 <path d="M53 176H247M75 176V203M126 176V202M177 176V203M225 176V211" fill="none"/>
-<ellipse cx="75" cy="218" rx="10" ry="16" fill="#c5d9d5"/><path d="M116 204H136V229H116ZM166 204H187L182 232H170Z" fill="#c5d9d5"/><circle cx="225" cy="224" r="12" fill="#c5d9d5"/>
+${s.utensil==='fork'?'<path d="M65 201V215Q75 231 85 215V201M75 201V232" fill="none"/>':'<ellipse cx="75" cy="218" rx="10" ry="16" fill="#c5d9d5"/>'}<path d="M116 204H136V229H116ZM166 204H187L182 232H170Z" fill="#c5d9d5"/><circle cx="225" cy="224" r="12" fill="#c5d9d5"/>
 ${s.shelfJar?'<rect x="220" y="106" width="31" height="31" rx="5" fill="#e39a7d"/><path d="M220 103H251M225 113H246M225 128H246" fill="none" stroke-width="2"/>':''}
+${s.cupHandles===2?'<path d="M72 118Q55 113 58 125Q61 133 74 130" fill="none"/>':''}
 <!-- Cooker, tile backsplash and countertop. -->
 <path d="M25 241H763V301H25Z" fill="#d3e6df"/>
 <g stroke-width="1"><path d="M25 261H763M25 282H763M57 241V301M108 241V301M159 241V301M210 241V301M261 241V301M312 241V301M363 241V301M414 241V301M465 241V301M516 241V301M567 241V301M618 241V301M669 241V301M720 241V301"/></g>
@@ -40,10 +51,10 @@ ${s.shelfJar?'<rect x="220" y="106" width="31" height="31" rx="5" fill="#e39a7d"
 <path d="M130 338Q138 346 146 338M178 338Q186 346 194 338M583 338Q591 346 599 338M633 338Q641 346 649 338" fill="none"/>
 <path d="M318 298Q385 292 451 298Q469 299 470 319L466 428Q466 448 448 450H321Q302 447 302 429L299 320Q299 301 318 298Z" fill="#f9f2df"/>
 <rect x="317" y="352" width="136" height="74" rx="20" fill="#88a3b5"/><path d="M328 363L343 359M328 371L367 359" stroke="#fff9e9" stroke-width="2"/>
-<path d="M320 342H451" fill="none"/><circle cx="327" cy="325" r="5" fill="#365650"/><circle cx="356" cy="325" r="5" fill="#365650"/><circle cx="414" cy="325" r="5" fill="#365650"/><circle cx="443" cy="325" r="5" fill="#365650"/>
+<path d="M320 342H451" fill="none"/><circle cx="327" cy="325" r="5" fill="#365650"/><circle cx="356" cy="325" r="5" fill="#365650"/><circle cx="414" cy="325" r="5" fill="#365650"/>${s.stoveDial==='square'?'<rect x="436" y="318" width="14" height="14" rx="2" fill="#365650"/>':'<circle cx="443" cy="325" r="5" fill="#365650"/>'}
 <ellipse cx="340" cy="296" rx="23" ry="5" fill="#365650"/><ellipse cx="429" cy="296" rx="23" ry="5" fill="#365650"/>
 <!-- Sink, kitchen window, cabinet. -->
-<path d="M309 208V78Q309 49 339 48Q395 42 453 49Q481 51 481 78V208Q395 216 309 208Z" fill="#8ed9e3"/><path d="M395 56V209M310 132H479" fill="none"/><circle cx="440" cy="93" r="20" fill="#ffe27b"/><path d="M320 187Q340 160 358 184Q379 176 386 193H320" fill="#fffef0" stroke-width="1.5"/>
+<path d="M309 208V78Q309 49 339 48Q395 42 453 49Q481 51 481 78V208Q395 216 309 208Z" fill="#8ed9e3"/><path d="M395 56V209M310 132H479" fill="none"/>${s.kitchenSky==='moon'?'<path d="M445 73A21 21 0 1 0 453 109A22 22 0 0 1 445 73" fill="#fff9e9"/>':'<circle cx="440" cy="93" r="20" fill="#ffe27b"/>'}<path d="M320 187Q340 160 358 184Q379 176 386 193H320" fill="#fffef0" stroke-width="1.5"/>
 <path d="M303 211Q395 206 487 211Q499 215 488 222Q394 228 303 222Q291 216 303 211Z" fill="#b99070"/>
 <path d="M567 51Q640 38 715 51Q737 55 738 77L735 201Q735 222 714 225Q641 231 568 225Q546 222 545 201L543 78Q543 56 567 51Z" fill="#9bc7b1"/>
 <path d="M642 53V220" fill="none"/><rect x="559" y="63" width="71" height="146" rx="17" fill="#f7f2df"/>
@@ -63,8 +74,10 @@ ${s.towel==='striped'?'<path d="M346 356V420M360 356V420M375 356V420M390 356V420
 ${s.wardrobe==='round'?'<circle cx="111" cy="312" r="6" fill="#f1cd75"/><circle cx="149" cy="312" r="6" fill="#f1cd75"/>':'<path d="M111 300V325M149 300V325" fill="none"/>'}<path d="M52 445V457M208 445V457" fill="none"/>
 <path d="M43 188Q130 145 217 188" fill="none"/>
 <rect x="285" y="50" width="84" height="104" rx="10" fill="#fff9e9"/><rect x="427" y="50" width="84" height="104" rx="10" fill="#fff9e9"/>
-<g stroke-width="2"><path d="M327 137V73M327 108Q300 109 303 91Q324 89 327 108M327 92Q350 96 352 77Q332 77 327 92M469 137V73M469 115Q444 115 445 97Q467 97 469 115M469 92Q493 94 493 78Q474 76 469 92" fill="#9bc7b1"/></g>
+<g stroke-width="2"><path d="M327 137V73M327 108Q300 109 303 91Q324 89 327 108M327 92Q350 96 352 77Q332 77 327 92" fill="#9bc7b1"/></g>
 ${s.botanical==='flower'?'<g fill="#d7a0b2" stroke-width="2"><circle cx="327" cy="76" r="10"/><circle cx="314" cy="65" r="10"/><circle cx="340" cy="65" r="10"/><circle cx="327" cy="54" r="10"/><circle cx="327" cy="65" r="7" fill="#f1cd75"/></g>':''}
+${s.rightBotanical==='cactus'?'<path d="M465 136V88Q465 78 473 78Q481 78 481 88V136M465 114Q448 114 448 99V91Q448 84 455 84Q462 84 462 91V100H465M481 103Q492 103 492 92V86" fill="#9bc7b1" stroke-width="3"/>':'<path d="M469 137V73M469 115Q444 115 445 97Q467 97 469 115M469 92Q493 94 493 78Q474 76 469 92" fill="#9bc7b1" stroke-width="2"/>'}
+${s.wardrobeBadge?'<path d="M85 345L102 365L85 385L68 365Z" fill="#f1cd75" stroke-width="3"/>':''}
 <!-- Hanging moon mobile. -->
 <path d="M178 25V62M129 64H227M135 65V100M178 64V119M220 64V96" fill="none" stroke-width="2"/>
 <path d="M143 100A22 22 0 1 0 150 138A22 22 0 0 1 143 100" fill="#f1cd75"/>
@@ -72,6 +85,7 @@ ${s.botanical==='flower'?'<g fill="#d7a0b2" stroke-width="2"><circle cx="327" cy
 ${s.stars==='extra'?'<path d="M220 96L225 108L239 109L228 118L232 131L220 124L208 131L212 118L201 109L215 108Z" fill="#f1cd75"/>':'<circle cx="220" cy="112" r="12" fill="#d7a0b2"/>'}
 <!-- Bed, pillows, quilt and curved headboard. -->
 <path d="M260 308Q254 267 261 235Q267 199 306 197Q400 177 499 197Q538 199 546 235Q553 269 544 309Z" fill="#9bc7b1"/><path d="M277 284V244Q277 208 311 208H494Q528 208 528 244V284" fill="none" stroke-width="2"/>
+${s.headboard==='tufted'?'<g fill="#365650" stroke-width="2"><circle cx="350" cy="215" r="5"/><circle cx="400" cy="211" r="5"/><circle cx="450" cy="215" r="5"/><path d="M345 210L355 220M395 206L405 216M445 210L455 220"/></g>':''}
 <path d="M272 292H531L563 431H241Z" fill="#fff9e9"/>
 <path d="M293 250Q284 240 307 237Q339 230 372 239Q388 243 382 258L377 287Q377 301 361 295Q331 287 300 298Q282 302 287 286Z" fill="#fff9e9"/>
 <path d="M404 250Q392 240 414 237Q454 229 487 239Q503 240 502 256L508 285Q515 301 495 297Q450 287 419 298Q400 303 405 286Z" fill="#d7a0b2"/>
@@ -90,9 +104,12 @@ ${s.bedLamp?`<path d="M662 278V298M641 301Q662 290 681 301M642 231Q662 221 683 2
 <rect x="586" y="48" width="150" height="139" rx="18" fill="#88a3b5"/><path d="M661 49V186M587 118H735" fill="none"/>
 <path d="M600 51A20 20 0 1 0 620 82A21 21 0 0 1 600 51" fill="#fff9e9" stroke-width="1"/>
 <path d="M574 40H609Q618 103 581 145V199H570ZM745 40H710Q700 103 739 145V199H750Z" fill="#d7a0b2"/>
+${s.windowStars?'<path d="M684 69L688 80L699 84L688 88L684 99L680 88L669 84L680 80ZM703 102L706 109L713 112L706 115L703 122L700 115L693 112L700 109Z" fill="#f1cd75" stroke-width="1.5"/>':''}
+${s.drapeDots?'<g fill="#365650" stroke="none"><circle cx="583" cy="59" r="3"/><circle cx="591" cy="77" r="3"/><circle cx="584" cy="94" r="3"/><circle cx="590" cy="112" r="3"/><circle cx="580" cy="130" r="3"/></g>':''}
 <path d="M577 145H591M731 145H745" fill="none" stroke-width="2"/>
 <ellipse cx="401" cy="492" rx="245" ry="22" fill="#f1cd75"/><ellipse cx="401" cy="492" rx="224" ry="15" fill="none" stroke-width="1"/>
 `}
+${!kitchen&&s.rugSpots?'<g fill="#365650" stroke-width="1"><circle cx="300" cy="490" r="7"/><circle cx="350" cy="488" r="7"/><circle cx="400" cy="487" r="7"/><circle cx="450" cy="488" r="7"/><circle cx="500" cy="490" r="7"/></g>':''}
 <!-- Ink texture and small floorboard marks. -->
 <g stroke-width="1" fill="none"><path d="M25 382H231M571 382H779M60 463l24 -2M69 468l12 -1M700 481l25 2M712 486l13 1M263 29l3 -2M269 29l2 1M774 219l-3 2M770 224l-2 1"/></g>
 </g></svg>`;

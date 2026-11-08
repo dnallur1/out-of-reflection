@@ -1,11 +1,11 @@
-import {clues} from './hints.mjs?v=chances-1';
-import {initialState,reflected,select,remaining,TOTAL,stageIndex,stageProgress,STAGE_COUNTS,STAGE_STARTS,advance,WRONG_ALLOWANCE,retryRoom} from './game-state.mjs?v=chances-1';
-import {drawRoom,roomObjects} from './room.js?v=chances-1';
+import {clues} from './hints.mjs?v=all-shift-2';
+import {initialState,reflected,select,remaining,TOTAL,stageIndex,stageProgress,STAGE_COUNTS,STAGE_STARTS,advance,WRONG_ALLOWANCE,retryRoom} from './game-state.mjs?v=all-shift-2';
+import {drawRoom,roomObjects} from './room.js?v=all-shift-2';
 const $=id=>document.getElementById(id);
 let state=initialState(),busy=false,soundOn=true,audio,feedbackTimer;
 const roomNames=['Living room','Kitchen','Bedroom'];
 const roomComplete=()=>stageProgress(state)===STAGE_COUNTS[stageIndex(state)];
-const stageCopy=[['01 / LIVING ROOM','Look, then look again.','Find three differences. After each find, the remaining differences shift. Look again as colour returns.'],['02 / KITCHEN','A new room. A closer look.','Find five differences in the kitchen: compare the countertop, cooker and cabinet.'],['03 / BEDROOM','Watch the room transform.','Find seven differences in the bedroom. Each selection changes the real room to match its reflection.']];
+const stageCopy=[['01 / LIVING ROOM','Look, then look again.','Find three differences. After each find, the remaining differences shift. Look again as colour returns.'],['02 / KITCHEN','A new room. A closer look.','Find five differences. Every correct find changes the remaining mismatches—compare the whole kitchen again.'],['03 / BEDROOM','Watch the room transform.','Find seven differences. Each find changes the room and shifts the remaining mismatches. Keep looking again.']];
 function cue(kind){if(!soundOn)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();const t=audio.currentTime;for(const [freq,duration,volume] of kind==='wrong'?[[260,.22,.055],[196,.3,.035]]:kind==='end'?[[523,.8,.05],[659,.8,.03]]:[[660,.35,.05],[667,.5,.02]]){const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;g.gain.setValueAtTime(volume,t);g.gain.exponentialRampToValueAtTime(.001,t+duration);o.connect(g).connect(audio.destination);o.start(t);o.stop(t+duration);}}catch{soundOn=false;$('sound').textContent='Sound unavailable';}}
 function render(){
  const objects=roomObjects(state.room.scene);
@@ -15,7 +15,7 @@ function render(){
  $('room').innerHTML=drawRoom(state.room,colour,step);$('mirror').innerHTML=drawRoom(reflected(state),colour,step);
  $('board').style.setProperty('--blur',`${3*(1-colour)}px`);
  for(const view of ['room','mirror'])for(const [key,o] of Object.entries(objects)){
- const b=document.createElement('button');b.className='target';b.dataset.object=key;b.setAttribute('aria-label',`Inspect ${view==='mirror'?'reflected':'room'} ${o.name}`);b.style.left=`${view==='mirror'?100-o.x/8:o.x/8}%`;b.style.top=`${o.y/5.2}%`;b.style.setProperty('--width',`${o.w/8}%`);b.style.setProperty('--height',`${o.h/5.2}%`);b.disabled=!state.started||roomComplete()||state.failed||busy||state.stageFound.includes(key);if(state.stageFound.includes(key))b.classList.add('resolved');b.addEventListener('click',()=>clickObject(key,view));$(view).append(b);
+ const b=document.createElement('button');b.className='target';b.dataset.object=key;b.style.zIndex=remaining(state).includes(key)?'2':'1';b.setAttribute('aria-label',`Inspect ${view==='mirror'?'reflected':'room'} ${o.name}`);b.style.left=`${view==='mirror'?100-o.x/8:o.x/8}%`;b.style.top=`${o.y/5.2}%`;b.style.setProperty('--width',`${o.w/8}%`);b.style.setProperty('--height',`${o.h/5.2}%`);b.disabled=!state.started||roomComplete()||state.failed||busy||state.stageFound.includes(key);if(state.stageFound.includes(key))b.classList.add('resolved');b.addEventListener('click',()=>clickObject(key,view));$(view).append(b);
  }
  for(const item of document.querySelectorAll('.journey li')){
  const index=Number(item.dataset.stage),current=index===stageIndex(state);
@@ -86,7 +86,7 @@ function clickObject(key,view){
  clearWarning();
  busy=true;button.classList.add('correct');cue('correct');$('hint').disabled=true;
  for(const b of document.querySelectorAll('.target'))b.disabled=true;
- $('status').textContent=before>=STAGE_STARTS[2]?'Your selection changes the room to match the mirror.':(stageIndex(state)===0?'Found. The reflection has shifted—look again for new differences.':'Found. Colour returns to the room. Find the remaining differences in this stage.');
+ $('status').textContent=before>=STAGE_STARTS[2]?'Your selection changes the room. The remaining differences have shifted—look again.':'Found. The reflection has shifted—look again for new differences.';
  feedbackTimer=setTimeout(()=>{state=result.state;busy=false;render();celebrateDiscovery(key);$('hint-text').textContent='Need a nudge? Ask for a short clue.';
  if(state.found===TOTAL){$('ending-details').textContent='You found 3 living room differences, 5 kitchen differences and 7 bedroom differences.';$('ending').hidden=false;$('status').textContent='All fifteen differences found. Full colour has returned to the room.';cue('end');$('inspect').focus();}
  else if(roomComplete()){$('status').textContent=`${roomNames[stageIndex(state)]} complete! All differences found. Select Continue when you are ready.`;cue('end');$('continue').focus({preventScroll:true});}
