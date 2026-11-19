@@ -291,3 +291,10 @@ footer{border-top:1.5px dashed #d5cada;color:#8a7b94;font-size:8px;letter-spacin
 }
 
 .discovery-tick {background:#6b34b8;color:#ffffff;border:2px solid #ffffff;box-shadow:0 0 0 1px #4b1d85}
+
+/* Give each scene the full available width on phones. */
+@media(max-width:600px){
+ .board{grid-template-columns:minmax(0,1fr);gap:14px}
+ .scene-panel>h2{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:9px 11px;min-height:39px}
+ .scene-panel>h2 span{display:inline;font-size:7px}
+}
