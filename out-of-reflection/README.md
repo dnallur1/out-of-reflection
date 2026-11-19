@@ -16,7 +16,7 @@ Click or tap a mismatch in either the room or reflection. Find 3 differences in 
 
 ## Layout
 
-The playful paper-and-stickers page uses a bold title, a three-step journey strip, pastel progress bar, text-clue strip, framed comparison panels and a completion card below the images. Two landscape room views share a comparison board without stretching the illustrations. Instructions, score, level, per-level progress, and restart sit above the board. The living room has a sofa, shelves and coffee table; the kitchen has a cooker, tiled backsplash, sink and cupboards; the bedroom has a bed, wardrobe, bedside table and moon mobile. All three use the same ink-and-paper cartoon treatment. A shared illustration detail layer adds furniture contact shadows, upholstery piping, woodgrain, cabinet bevels, oven hardware, ceramic marks, frame borders, drapery folds and stitched textiles. Details belonging to removable mismatch objects disappear with them.
+The playful paper-and-stickers page uses a bold title, a three-step journey strip, pastel progress bar, text-clue strip, framed comparison panels and a completion card below the images. Two landscape room views share a comparison board without stretching the illustrations. Instructions, score, level, per-level progress, and restart sit above the board. The living room has a sofa, shelves and coffee table; the kitchen has an oven, tiled backsplash, sink and cupboards; the bedroom has a bed, wardrobe, bedside table and moon mobile. All three use the same ink-and-paper cartoon treatment. A shared illustration detail layer adds furniture contact shadows, upholstery piping, woodgrain, cabinet bevels, oven hardware, ceramic marks, frame borders, drapery folds and stitched textiles. Details belonging to removable mismatch objects disappear with them.
 
 ## Verification
 
@@ -34,3 +34,11 @@ Help opens as a native modal dialog without resizing or repositioning the illust
 ## Shifting differences
 
 All three levels replace every remaining active mismatch after each correct find, and hints update to the new set. Retry restores that room's initial differences, while completed rooms stay complete. The kitchen uses a pool of nine details and the bedroom thirteen, with five and seven discoveries required respectively.
+
+## Local expansion under review
+
+Three additional rooms follow the original three: study, greenhouse, and attic. Each needs seven discoveries from a rotating pool of thirteen details. Their mirrors begin at 4px, 4.5px, and 5px blur, clearing with progress. Levels 1–3 retain their original untimed rules and 3/5/7 counts.
+
+The new countdowns begin on entering each room: 3:00, 2:45, and 2:30. They pause during discovery feedback, the help dialog, and while the tab is hidden. Running out of time locks the room and offers Retry; retry resets that room's timer, colour, score contribution, chances, and found objects while preserving previous rooms. Countdown values are initial tuning choices for playtesting. All changes remain local until explicitly approved for publication.
+
+The newer rooms now use separate prop sets instead of repeating the living-room decorations. The study has maps, a compass, globe, ink bottle, task light, blinds, letters, files, and drawing plans. The greenhouse has a thermometer, tool board, seedlings, watering can, trowel, gloves, compost, roof vent, and hanging plants. The attic has a camera, records, gramophone, binoculars, candle holder, postcard, travel bag, football, steamer trunk, and wooden train. Their object names and text hints follow these illustrations. Local visual review (`?review=1`) browses all rooms in colour without gameplay or countdowns.

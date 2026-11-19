@@ -7,7 +7,7 @@ const living=lines(`
 <path d="M298 294l6 9M353 306l-5 10M512 295l5 10M544 299l-4 12M269 360l7 5M592 357l-6 7" opacity=".65"/>
 <!-- Turned table edge, woodgrain, and concentric rug binding. -->
 <path d="M313 432Q410 466 511 433M317 437Q412 470 507 438M340 447l-8 17M487 447l7 15M314 477l-3 11M508 478l3 11"/>
-<path d="M66 374l-3 22M171 375l5 20M79 361q16 -4 30 0M136 363q20 -4 34 0"/>
+<path transform="translate(25 0)" d="M66 374l-3 22M171 375l5 20M79 361q16 -4 30 0M136 363q20 -4 34 0"/>
 <!-- Subtle glazing and double curtain stitching. -->
 <path d="M42 53Q118 46 196 53M41 263Q119 270 198 265M128 52V151M130 167V266" opacity=".5"/>
 `);
@@ -17,7 +17,7 @@ const kitchen=lines(`
 <path d="M48 328Q96 324 147 328M178 328Q226 324 276 328M495 328Q546 324 600 328M634 328Q684 324 738 328M48 441Q160 449 280 441M491 441Q616 449 741 441" opacity=".6"/>
 <!-- Routed counter edge and worn timber grain. -->
 <path d="M30 308H295M475 308H758M44 302l53 0M216 302h64M492 302h35M710 302h36M51 346h54M179 349h62" opacity=".55"/>
-<!-- Cooker hardware and double oven glazing. -->
+<!-- Oven hardware and double oven glazing. -->
 <path d="M309 318Q308 305 323 304Q384 299 448 304Q463 305 462 320L460 428Q460 439 446 440H324Q309 438 310 425ZM317 347H454M326 416H445M329 405H444M329 398H444M331 382l14 -5M338 386l23 -8"/>
 <path d="M321 337H448" stroke-width="5"/>
 <path d="M325 338H444" stroke="#ffffff" stroke-width="1"/>
@@ -26,8 +26,7 @@ const kitchen=lines(`
 <path d="M53 88V101L67 88M239 88V101L253 88M64 152V164L76 152M233 152V164L245 152M61 56H78M61 62H78M100 49H115M100 57H115M141 55H155M142 63H155M76 124H98M146 117H167"/>
 <path d="M64 54v14M103 44v24M143 52v16M194 57v11" stroke="#ffffff" stroke-width="2"/>
 <!-- Window recess and cabinet joinery. -->
-<path d="M303 211V77Q303 44 337 43Q395 37 456 44Q488 46 488 78V211M316 202V79Q316 56 340 55Q395 49 452 56Q475 58 475 80V202M402 62V124M403 140V203M315 215H481M553 201V81Q552 59 576 57L622 57M650 58H708Q730 60 730 82V201"/>
-<path d="M319 67l29 -4M320 75l15 -3M433 147l36 -12M445 151l24 -8" stroke="#ffffff" stroke-width="2"/>
+<path d="M551 201V81Q552 59 576 57L622 57M650 58H708Q730 60 730 82V201"/>
 <!-- Sink rim and curved draining grooves. -->
 <path d="M598 301Q654 310 713 301M603 299Q655 304 706 299M721 290l25 0M721 285l25 0M722 280l24 0M680 266V291"/>
 <!-- Woven runner binding and fringe. -->
@@ -46,11 +45,9 @@ const bedroom=lines(`
 <!-- Bedside table joinery, lower shelf and turned leg details. -->
 <path d="M611 355H726M625 371Q667 367 711 371L708 397Q668 406 626 397ZM646 378H690M620 410H715M624 414V435M711 414V435M650 382h36M657 388h23"/>
 <!-- Fine frame borders, picture wires and botanical veins. -->
-<path d="M299 56H355Q363 56 363 65V139Q363 148 354 148H300Q291 148 291 139V65Q291 56 299 56ZM441 56H497Q505 56 505 65V139Q505 148 496 148H442Q433 148 433 139V65Q433 56 441 56ZM294 49L327 30L359 49M436 49L469 30L501 49M307 96l18 9M348 82l-18 8M449 103l18 10M488 82l-16 8"/>
+<path d="M441 56H497Q505 56 505 65V139Q505 148 496 148H442Q433 148 433 139V65Q433 56 441 56ZM436 49L469 30L501 49M449 103l18 10M488 82l-16 8"/>
 <!-- Drapery stitching and timber sill, with light glancing off the panes. -->
 <path d="M582 51Q591 100 579 135M590 52Q602 102 586 135M738 51Q726 102 740 135M730 52Q716 103 732 135M577 154V189M743 154V189M583 189H737V199H583M613 55h95M615 59l20 -4M674 127l30 -7M681 133l23 -7"/>
-<!-- Braided bedside rug. -->
-<path d="M174 490Q401 455 628 490M184 500Q403 477 618 500M199 485l-4 13M220 481l-3 16M242 478l-3 17M264 476l-2 17M286 473l-1 18M309 471v19M332 470v19M355 469v20M378 468v21M401 468v21M424 468v21M447 469v20M470 470v20M493 472v19M516 474l1 19M539 476l2 18M562 479l3 17M585 483l3 15M606 487l4 12" opacity=".55"/>
 `);
 function shadows(scene){
 const shapes=scene==='kitchen'?'<ellipse cx="163" cy="448" rx="139" ry="11"/><ellipse cx="618" cy="448" rx="145" ry="11"/>':scene==='bedroom'?'<ellipse cx="401" cy="462" rx="184" ry="17"/><ellipse cx="131" cy="452" rx="104" ry="12"/><ellipse cx="669" cy="444" rx="77" ry="9"/>':'<ellipse cx="426" cy="405" rx="202" ry="17"/><ellipse cx="119" cy="405" rx="83" ry="10"/><ellipse cx="698" cy="445" rx="40" ry="7"/>';
@@ -66,18 +63,17 @@ let detail=scene==='kitchen'?kitchen:scene==='bedroom'?bedroom:living;
 if(scene==='living'){
  if(s.lamp)detail+=lines('<path d="M677 185q20 -7 45 0M669 218q29 7 64 1M695 247v179"/>');
  if(s.plant)detail+=lines('<path d="M116 239l8 10M145 255l-12 16M101 272l13 8"/>');
- if(s.flower)detail+=lines('<path d="M412 314l4 1M422 305v5M429 315l-4 1"/>');
+ if(s.flower)detail+=lines('<path transform="translate(-25 0)" d="M412 314l4 1M422 305v5M429 315l-4 1"/>');
 }
 if(scene==='kitchen'){
- if(s.kettle)detail+=lines('<path d="M140 249Q134 269 143 277M150 242H176M193 253q16 -11 15 8M146 278H178"/>');
- if(s.shelfJar)detail+=lines('<path d="M224 110v14M225 131h21"/>');
- detail+=lines(s.fruit==='pears'?'<path d="M571 278q-4 6 3 8M607 274q-4 6 1 9M577 255l4 -5M610 257l4 -5"/>':'<path d="M559 270l3 4M585 265l3 4M608 272l3 3M555 281q-2 4 2 6M581 278q-2 5 2 7"/>');
- detail+=lines('<path d="M545 295q34 17 72 0M343 357v43M404 357v43M343 422h61"/>');
+ if(s.kettle)detail+=lines('<path transform="translate(0 9)" d="M140 249Q134 269 143 277M150 242H176M193 253q16 -11 15 8M146 278H178"/>');
+ if(s.shelfJar)detail+=lines('<path transform="translate(20 12)" d="M224 110v14M225 131h21"/>');
+ detail+=lines(s.fruit==='pears'?'<path transform="translate(-53 -19)" d="M571 278q-4 6 3 8M607 274q-4 6 1 9M577 255l4 -5M610 257l4 -5"/>':'<path transform="translate(-53 -19)" d="M559 270l3 4M585 265l3 4M608 272l3 3M555 281q-2 4 2 6M581 278q-2 5 2 7"/>');
+ detail+=lines('<path transform="translate(-53 -19)" d="M545 295q34 17 72 0"/><path d="M343 357v43M404 357v43M343 422h61"/>');
 }
 if(scene==='bedroom'){
- if(s.bedLamp)detail+=lines('<path d="M635 272Q662 280 689 272M646 234Q660 231 678 234M658 280v17M644 302h34"/>');
- detail+=lines('<path d="M627 332h58M630 335h51"/>');
- if(s.nightBook===2)detail+=lines('<path d="M634 316h58M636 319h49"/>');
+ detail+=lines('<path d="M614 345h58M617 348h51"/>');
+ if(s.nightBook===2)detail+=lines('<path d="M621 329h58M623 332h49"/>');
 }
 return svg.replace('</svg>',detail+'</svg>');
 }

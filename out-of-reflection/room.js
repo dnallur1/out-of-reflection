@@ -1,7 +1,9 @@
-import {polishRoom} from './art-details.js?v=all-shift-2';
-import {otherRoom,otherObjects} from './other-rooms.js?v=all-shift-2';
+import {finalRoom,finalRoomObjects} from './final-rooms.js?v=garage-level-seven-1';
+import {extraRoom,extraRoomObjects} from './extra-rooms.js?v=garage-level-seven-1';
+import {polishRoom} from './art-details.js?v=garage-level-seven-1';
+import {otherRoom,otherObjects} from './other-rooms.js?v=garage-level-seven-1';
 export const objects={
- lowerPicture:{name:'lower right picture',x:568,y:211,w:98,h:55},
+ lowerPicture:{name:'lower right picture',x:568,y:196,w:98,h:55},
  curtains:{name:'window curtains',x:218,y:154,w:40,h:268},
  shelfBooks:{name:'books on the top shelf',x:717,y:33,w:100,h:44},
  upholstery:{name:'sofa upholstery',x:477,y:284,w:35,h:40},
@@ -9,13 +11,47 @@ export const objects={
  flower:{name:'vase and flower',x:417,y:355,w:90,h:170},
  lamp:{name:'floor lamp',x:700,y:302,w:120,h:305},
  plant:{name:'potted plant',x:125,y:298,w:108,h:160},
- clock:{name:'clock',x:366,y:100,w:100,h:100},
+ clock:{name:'clock',x:400,y:100,w:100,h:100},
  picture:{name:'upper right picture',x:567,y:105,w:112,h:115},
- cushion:{name:'sofa cushion',x:332,y:300,w:100,h:95},
+ cushion:{name:'sofa cushion',x:330,y:300,w:82,h:95},
  mug:{name:'mug',x:186,y:351,w:55,h:55}
 };
-export function roomObjects(scene){return otherObjects[scene] || Object.fromEntries(['flower','lamp','plant','clock','picture','cushion'].map(key=>[key,objects[key]]));}
-export function drawRoom(s, colourProgress = 0, colourStep = 1/15){let svg = s.scene && s.scene!=='living' ? otherRoom(s) : `<svg class="room-art" viewBox="0 0 800 520" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Illustrated sitting room: left window and plant table, central cartoon sofa, clock and four pictures, four right shelves, oval rug and coffee table, floor lamp"><defs><pattern id="stripes" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#f7d777"/><path d="M0 0V14" stroke="#d887a3" stroke-width="5"/></pattern><pattern id="woven" width="12" height="8" patternUnits="userSpaceOnUse"><path d="M1 4H5M8 1V3M8 6V8" stroke="#365650" stroke-width=".7" fill="none"/></pattern><pattern id="diamonds" width="40" height="24" patternUnits="userSpaceOnUse"><path d="M20 1L38 12L20 23L2 12Z" fill="none" stroke="#365650" stroke-width="1.5"/></pattern></defs>
+const targetOffsets = {
+ living:{flower:[-25,0],cushion:[-25,0]},
+ kitchen:{utensil:[20,12],cupHandles:[20,12],shelfJar:[20,12]},
+ bedroom:{pillow:[-25,0],blanket:[-25,0],headboard:[-25,0],rugSpots:[-25,0]}
+};
+export function roomObjects(scene){
+ const areas=['garage','music','workshop','observatory'].includes(scene)?finalRoomObjects(scene):['study','greenhouse','attic'].includes(scene)?extraRoomObjects(scene):otherObjects[scene] || Object.fromEntries(['flower','lamp','plant','clock','picture','cushion'].map(key=>[key,objects[key]]));
+ return Object.fromEntries(Object.entries(areas).map(([key,area])=>{
+  const [dx,dy]=targetOffsets[scene]?.[key]||[0,0];
+  return [key,{...area,x:area.x+dx,y:area.y+dy}];
+ }));
+}
+function shiftSection(svg,start,end,dx,dy=0){
+ const first=svg.indexOf(start),last=svg.indexOf(end,first+start.length);
+ if(first<0||last<0)return svg;
+ return svg.slice(0,first)+`<g transform="translate(${dx} ${dy})">`+svg.slice(first,last)+'</g>'+svg.slice(last);
+}
+function composeRoom(svg,scene){
+ if(scene==='living'){
+  svg=shiftSection(svg,'<!-- Oval rug behind','<!-- Left side table',-25);
+  svg=shiftSection(svg,'<!-- Oval coffee table','<!-- Pink floor lamp',-25);
+  svg=shiftSection(svg,'<!-- Soft upholstery','<!-- Subtle glazing',-25);
+ }
+ if(scene==='kitchen'){
+  svg=shiftSection(svg,'<!-- Open wall shelving','<!-- Oven, tile',20,12);
+  svg=shiftSection(svg,'<!-- Shelf brackets','<!-- Window recess',20,12);
+ }
+ if(scene==='bedroom'){
+  svg=shiftSection(svg,'<!-- The rug is painted','<!-- Bedroom wardrobe',-25);
+  svg=shiftSection(svg,'<!-- Bed, pillows','<!-- Bedside table',-25);
+  svg=shiftSection(svg,'<!-- Deep upholstered','<!-- Bedside table joinery',-25);
+ }
+ return svg;
+}
+
+export function drawRoom(s, colourProgress = 0, colourStep = 1/15){let svg = ['garage','music','workshop','observatory'].includes(s.scene)?finalRoom(s):['study','greenhouse','attic'].includes(s.scene)?extraRoom(s):s.scene && s.scene!=='living' ? otherRoom(s) : `<svg class="room-art" viewBox="0 0 800 520" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Illustrated sitting room: left window and plant table, central cartoon sofa, clock and four pictures, four right shelves, oval rug and coffee table, floor lamp"><defs><pattern id="woven" width="12" height="8" patternUnits="userSpaceOnUse"><path d="M1 4H5M8 1V3M8 6V8" stroke="#365650" stroke-width=".7" fill="none"/></pattern><pattern id="diamonds" width="40" height="24" patternUnits="userSpaceOnUse"><path d="M20 1L38 12L20 23L2 12Z" fill="none" stroke="#365650" stroke-width="1.5"/></pattern></defs>
 <rect width="800" height="520" fill="#fff1cf"/><path d="M0 360Q400 350 800 359V520H0Z" fill="#e2bc86"/>
 <g fill="none" stroke="#c79569" stroke-width="2"><path d="M0 414H800M0 474H800M113 360L68 520M271 357L256 520M539 358L559 520M691 359L758 520"/></g>
 <!-- Small wall marks and baseboard add ink-drawn room texture. -->
@@ -26,16 +62,18 @@ export function drawRoom(s, colourProgress = 0, colourStep = 1/15){let svg = s.s
 <path d="M120 43V274M34 158H205" fill="none"/>${s.curtains==='tied'?'<path d="M20 37H58Q69 120 33 182Q54 235 43 285H20Z" fill="#df9b80"/><path d="M221 37H183Q172 120 208 182Q187 235 198 285H221Z" fill="#df9b80"/><path d="M22 180L42 186M199 186L219 180" stroke="#365650" stroke-width="5"/>':'<path d="M22 37V285M219 37V285" stroke="#df9b80" stroke-width="13"/>'}
 </g>
 <g fill="none" stroke="#365650" stroke-width="1.5" stroke-linecap="round"><path d="M16 44V278M26 43V278M214 43V279M224 43V279M38 280Q115 286 201 280M42 55L65 51M42 62L54 60"/><path d="M45 63L97 53M45 73L77 66M137 183L192 165M151 187L192 174"/></g>
+<!-- A small decorative key rack sits below the clock in both views. -->
+<g transform="translate(405 174)" stroke="#365650" stroke-linecap="round" stroke-linejoin="round"><path d="M-36 -22Q0 -29 36 -22V-2Q0 3 -36 -2Z" fill="#bc9972" stroke-width="3"/><path d="M-30 -17Q0 -23 30 -17M-30 -7H30" fill="none" stroke-width="1.3"/><g fill="#e7bd78" stroke-width="2">${[-23,23].map(x=>`<g transform="translate(${x} 0)"><path d="M0 -6V7" fill="none"/><circle cy="13" r="6"/><path d="M0 19V36H7M0 29H6" fill="none"/></g>`).join('')}</g></g>
 <!-- Clock and four staggered picture frames. -->
-<g stroke="#365650" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><circle cx="366" cy="100" r="36" fill="#fffdf1"/><path d="M366 100L368 77M366 100L${s.clock===8?'346 115':'386 108'}" fill="none"/>
+<g stroke="#365650" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(34 0)"><circle cx="366" cy="100" r="36" fill="#fffdf1"/><path d="M366 100L368 77M366 100L${s.clock===8?'346 115':'386 108'}" fill="none"/></g>
 <rect x="254" y="45" width="47" height="64" rx="2" fill="#fff9e9" stroke="#956e54"/><path d="M261 99L276 69L294 99Z" fill="#84b49b" stroke="none"/>
 <rect x="274" y="151" width="49" height="64" rx="2" fill="#fff9e9" stroke="#956e54"/><path d="M282 203Q299 170 315 203" fill="#e8b6a6" stroke="none"/>
 <path d="M514 50L619 48L620 159L515 162Z" fill="#fff9e9" stroke="#956e54"/>
 ${s.picture==='sun'?'<path d="M530 147V114Q529 78 564 79Q602 79 603 114V147Z" fill="#83b59a" stroke="none"/><circle cx="568" cy="86" r="21" fill="#ffd16a" stroke="none"/>':'<path d="M530 147V114Q529 78 564 79Q602 79 603 114V147Z" fill="#88a3b5" stroke="none"/><path d="M573 65A24 24 0 1 0 588 105A24 24 0 0 1 573 65" fill="#ffe3a1" stroke="none"/>'}
-<rect x="522" y="185" width="93" height="55" rx="2" fill="#fff9e9" stroke="#956e54"/>${s.lowerPicture==='swirl'?'<path d="M538 218Q543 195 570 199Q597 200 598 216Q594 231 570 227Q551 222 560 211Q570 203 581 212Q584 218 574 218" fill="none" stroke="#9dbbaa" stroke-width="4"/>':'<path d="M531 230L548 210L567 226L585 204L607 230" fill="#9dbbaa" stroke="none"/>'}
+<g transform="translate(0 -15)"><rect x="522" y="185" width="93" height="55" rx="2" fill="#fff9e9" stroke="#956e54"/>${s.lowerPicture==='swirl'?'<path d="M538 218Q543 195 570 199Q597 200 598 216Q594 231 570 227Q551 222 560 211Q570 203 581 212Q584 218 574 218" fill="none" stroke="#9dbbaa" stroke-width="4"/>':'<path d="M531 230L548 210L567 226L585 204L607 230" fill="#9dbbaa" stroke="none"/>'}</g>
 </g>
 <!-- Tick marks, hanging wires and inner frame borders. -->
-<g fill="none" stroke="#365650" stroke-linecap="round"><path d="M366 68V73M366 127V132M335 100H340M392 100H397M344 78L348 82M386 121L389 124M344 122L348 118M385 80L389 76" stroke-width="2"/><circle cx="366" cy="100" r="3" fill="#365650"/><path d="M260 44L276 30L294 44M520 49L566 26L612 48M280 150L296 137L317 150M531 184L568 170L608 184" stroke-width="1.5"/><path d="M258 50H296V104H259ZM279 156H318V210H279M520 55L613 54V154L520 155ZM527 190H610V234H527Z" stroke-width="1"/></g>
+<g fill="none" stroke="#365650" stroke-linecap="round"><g transform="translate(34 0)"><path d="M366 68V73M366 127V132M335 100H340M392 100H397M344 78L348 82M386 121L389 124M344 122L348 118M385 80L389 76" stroke-width="2"/><circle cx="366" cy="100" r="3" fill="#365650"/></g><path d="M260 44L276 30L294 44M520 49L566 26L612 48M280 150L296 137L317 150" stroke-width="1.5"/><path d="M258 50H296V104H259ZM279 156H318V210H279M520 55L613 54V154L520 155ZM527 175H610V219H527Z" stroke-width="1"/></g>
 <!-- Four aligned wall shelves, above the lamp. -->
 <g fill="#bc9972" stroke="#365650" stroke-width="3" stroke-linejoin="round"><path d="M664 47H770V57H664Z"/><path d="M664 84H770V94H664Z"/><path d="M664 121H770V131H664Z"/><path d="M664 158H770V168H664Z"/></g>
 <g stroke="none"><rect x="681" y="22" width="11" height="25" fill="#86bba1"/><rect x="696" y="28" width="13" height="19" fill="#e7bd78"/><rect x="714" y="19" width="10" height="28" fill="#d59eae"/></g>
@@ -51,7 +89,8 @@ ${s.shelfBooks===4?'<g fill="#d59eae" stroke="#365650" stroke-width="2"><rect x=
 <path d="M240 335V270Q240 231 284 231H567Q612 231 612 270V337Z" fill="#79b99b"/>
 <path d="M261 330V277Q261 255 285 255H421Q437 255 437 274V331M437 277Q437 255 455 255H565Q590 255 590 277V331" fill="#96d0ad"/>
 <path d="M256 331H597V393H256Z" fill="#80c5a2"/><path d="M233 319Q234 302 251 304Q270 303 271 321V384Q272 402 253 400Q234 401 233 384Z" fill="#5da98c"/><path d="M589 320Q588 302 608 304Q628 303 628 321V383Q628 403 608 400Q589 402 589 384Z" fill="#5da98c"/>
-<path d="M291 278L345 269L366 321L310 334Z" fill="${s.cushion==='stripe'?'url(#stripes)':'#eaa1b9'}" stroke-width="4"/>
+<path d="M291 278L345 269L366 321L310 334Z" fill="#eaa1b9" stroke-width="4"/>
+${s.cushion==='stitched'?'<path d="M318 300l6 10M328 298l6 10M338 296l6 10" fill="none" stroke-width="2.5"/>':''}
 <path d="M500 273Q530 271 555 284L543 333L490 321Z" fill="#ffe08a" stroke-width="4"/>
 </g>
 ${s.upholstery==='tufted'?'<g stroke="#365650" stroke-width="2" fill="#5da98c"><circle cx="390" cy="284" r="5"/><circle cx="477" cy="284" r="5"/><path d="M381 275L386 280M394 288L399 293M381 293L386 288M394 280L399 275M468 275L473 280M481 288L486 293M468 293L473 288M481 280L486 275" fill="none"/></g>':''}
@@ -78,9 +117,20 @@ ${s.flower?'<path d="M412 376Q411 342 420 317" fill="none" stroke="#668e61" stro
 ${s.lamp?'<g stroke="#365650" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M700 230V440M674 443Q701 430 728 443" fill="none"/><path d="M666 176Q696 164 734 176L754 231Q705 244 648 231Z" fill="#df94b9"/><path d="M660 225Q704 233 742 225" fill="none" stroke="#c978a3" stroke-width="3"/></g>':''}
 ${s.lamp?'<g stroke="#365650" stroke-width="1.5" fill="none" stroke-linecap="round"><path d="M672 181L660 224M684 178L677 227M699 176V228M714 177L720 227M728 181L739 223M705 245V427M688 440L700 438M714 441l6 1"/><path d="M736 239V270"/><circle cx="736" cy="273" r="3" fill="#365650"/></g>':''}
 </svg>`;
-svg=polishRoom(svg,s);
+if(!['study','greenhouse','attic','garage','music','workshop','observatory'].includes(s.scene))svg=polishRoom(svg,s);
+svg=composeRoom(svg,s.scene);
 // Ink-and-paper palette. Keep differences visible without relying on colour.
-const monochrome = svg.replace(/stroke="#[0-9a-fA-F]{6}"/g, 'stroke="#171717"').replace(/stroke="none"/g, 'stroke="#171717" stroke-width="1.5"').replace(/#[0-9a-fA-F]{6}/g, colour => ['#171717','#365650','#90684c','#956e54','#d887a3','#7fa6aa','#ffd16a','#ffe3a1','#83b9c8'].includes(colour)?'#171717':'#ffffff');
+const darkInks = ['#171717','#365650','#90684c','#956e54','#d887a3','#7fa6aa','#ffd16a','#ffe3a1','#83b9c8'];
+const atticFills = {'#365650':'#525252', '#90684c':'#a4a4a4', '#956e54':'#a4a4a4', '#bc9972':'#dedede', '#8b9290':'#c4c4c4'};
+const studyFills = {'#365650':'#c9c9c9', '#90684c':'#eeeeee', '#956e54':'#f2f2f2', '#7fa6aa':'#eeeeee', '#83b9c8':'#e6e6e6', '#617f82':'#e0e0e0'};
+const attic = s.scene === 'attic';
+const lightPalette = attic || s.scene === 'study' || s.scene === 'garage';
+const fills = attic ? atticFills : studyFills;
+const outline = lightPalette ? '#363636' : '#171717';
+const monochrome = svg
+ .replace(/#[0-9a-fA-F]{6}/g, colour => lightPalette ? (fills[colour] ?? '#ffffff') : (darkInks.includes(colour) ? outline : '#ffffff'))
+ .replace(/stroke="#[0-9a-fA-F]{6}"/g, `stroke="${outline}"`)
+ .replace(/stroke="none"/g, match => lightPalette ? match : `stroke="${outline}" stroke-width="1.5"`);
 const amount = Math.min(1, Math.max(0, colourProgress));
 const colouredContent = svg.slice(svg.indexOf('>') + 1, svg.lastIndexOf('</svg>'))
  .replace(/id="([^"]+)"/g, 'id="colour-$1"').replace(/url\(#/g, 'url(#colour-');
