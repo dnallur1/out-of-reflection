@@ -1,5 +1,5 @@
 import {clues} from './hints.mjs?v=seven-levels-1';
-import {initialState,reflected,select,remaining,TOTAL,stageIndex,stageProgress,STAGE_COUNTS,advance,WRONG_ALLOWANCE,retryRoom} from './game-state.mjs?v=seven-levels-1';
+import {initialState,reflected,select,remaining,TOTAL,stageIndex,stageProgress,STAGE_COUNTS,advance,WRONG_ALLOWANCE,retryRoom} from './game-state.mjs?v=late-difficulty-experiment-1';
 import {drawRoom,roomObjects} from './room.js?v=compost-on-floor-1';
 const $=id=>document.getElementById(id);
 const localPreview=['127.0.0.1','localhost','[::1]'].includes(location.hostname);
@@ -12,10 +12,10 @@ const roomNames=['Living room','Kitchen','Bedroom','Study','Greenhouse','Attic',
 // Timed rooms scale blur with the scene so small details survive on narrow screens.
 const openingBlur = [
  'min(1px, .18cqw)','min(1.1px, .19cqw)','min(1.5px, .25cqw)',
- 'min(1.75px, .3cqw)','min(2px, .35cqw)','min(2.25px, .39cqw)',
- 'min(2.5px, .43cqw)'
+ 'min(1.75px, .3cqw)','min(2px, .35cqw)','min(2.5px, .43cqw)',
+ 'min(2.8px, .48cqw)'
 ];
-const timeLimits=[0,0,180,150,120,90,60];
+const timeLimits=[0,0,180,150,120,75,60];
 let timeLeft=0,timerLast=performance.now();
 function resetTimer(){timeLeft=timeLimits[state.stage];timerLast=performance.now();updateTimer();}
 function updateTimer(){const seconds=Math.max(0,Math.ceil(timeLeft));$('timer-metric').hidden=reviewMode||!timeLimits[state.stage];$('timer').textContent=`${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;$('timer-metric').classList.toggle('is-low',seconds<=30);}
@@ -30,7 +30,7 @@ const stageCopy = [
  ['Check the alignment', 'Use nearby objects as landmarks to spot finer position changes. Your first countdown gives you three minutes.'],
  ['Look for what shifted', 'Compare where small details sit on larger objects. You have two and a half minutes.'],
  ['Judge the size', 'Judge scale using nearby edges. Finds resize details in the room itself. You have two minutes.'],
- ['Trust your proportions', 'Compare small details and proportions in the hazier mirror. You have ninety seconds.'],
+ ['Trust your proportions', 'Compare stitching, markings and small details in the hazier mirror. You have seventy-five seconds.'],
  ['One minute. Look closer.', 'Compare the markings, patterns and details of the garage objects. You have one minute.'],
 ];
 const mirrorPrompt = $('mirror-prompt');

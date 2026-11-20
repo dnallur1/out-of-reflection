@@ -14,6 +14,11 @@ for(const [i,scene] of ['study','greenhouse','attic','garage'].entries()){
  const order=[...extraKeys.slice((i*4)%extraKeys.length),...extraKeys.slice(0,(i*4)%extraKeys.length)];
  stages.push(Object.fromEntries(order.map(key=>[key,true])));
 }
+// Local playtest: later rooms start with detail comparisons rather than large silhouettes.
+for(const [stage,order] of [
+ [5,['extraNote','extraHandles','extraBox','extraMobile','extraRug','extraClock','extraCushion']],
+ [6,['extraPicture','extraBooks','extraCup','extraNote','extraCushion','extraBox','extraMobile']]
+])stages[stage]=Object.fromEntries([...order,...extraKeys.filter(key=>!order.includes(key))].map(key=>[key,true]));
 export const LIVING_ROUNDS=[['flower','lamp','plant'],['clock','picture'],['cushion']];
 export const STAGE_COUNTS=[LIVING_ROUNDS.length,5,7,7,7,7,7];
 // Each list starts with the smallest details and ends with easier fallbacks.
@@ -53,7 +58,8 @@ export function select(state,key){
   const target=STAGE_COUNTS[state.stage];
   const needed=target-next.stageFound.length;
   const available=Object.keys(stages[state.stage]).filter(item=>!excluded.has(item));
-  const detailCount=Math.round(needed*next.stageFound.length/(target-1));
+  const detailShare=next.stageFound.length/(target-1);
+  const detailCount=Math.round(needed*(state.stage>=5?.55+.45*detailShare:detailShare));
   const fineDetails=detailPriority[state.stage].filter(item=>available.includes(item)).slice(0,detailCount);
   const otherDetails=available.filter(item=>!fineDetails.includes(item)).slice(0,needed-fineDetails.length);
   next.active=[...otherDetails,...fineDetails];
