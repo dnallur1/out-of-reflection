@@ -298,3 +298,9 @@ footer{border-top:1.5px dashed #d5cada;color:#8a7b94;font-size:8px;letter-spacin
  .scene-panel>h2{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:9px 11px;min-height:39px}
  .scene-panel>h2 span{display:inline;font-size:7px}
 }
+
+/* Completion floats over the artwork without taking layout space. */
+.board:has(>.stage-complete:not([hidden]))>.scene-panel{filter:blur(3px) brightness(.82);pointer-events:none}
+.board>.stage-complete{position:absolute;z-index:6;top:54px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:680px;margin:0;box-shadow:0 6px 0 #708e7a,0 12px 28px #29263c35}
+.board>.stage-complete:not([hidden]){outline:3px solid #fff9e9;outline-offset:3px;box-shadow:0 6px 0 #708e7a,0 16px 40px #29263c66}
+@media(max-width:600px){.board>.stage-complete{top:52px;width:calc(100% - 24px);max-height:calc(100dvh - 32px);overflow:auto}}

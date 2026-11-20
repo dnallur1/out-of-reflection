@@ -254,11 +254,31 @@ const supportAnchors = {
 };
 function variantTransform(scene,index,changed){
  if(!changed)return '';
+ if(scene==='garage')return '';
  const anchor=supportAnchors[scene][index];
- if(scene==='garage'&&index===11)return 'skewX(12)';
  if(index%3===0)return 'translate(7 0)';
  if(index%3===1)return anchor===null?'scale(.77)':`translate(0 ${anchor}) scale(.77) translate(0 ${-anchor})`;
  return anchor===null?'rotate(15)':`rotate(15 0 ${anchor})`;
+}
+// Garage discoveries change the object itself, with no transform-only answers.
+function garageVariant(index,art){
+ const additions=[
+  '',
+  '<path d="M-46 -12H46V14H-46Z" fill="#e7bd78" stroke="none"/><text x="0" y="10" text-anchor="middle" font-family="Arial,sans-serif" font-size="27" font-weight="bold" fill="#365650" stroke="none">702</text>',
+  '<path d="M-35 0H-12V20H-35ZM7 -10H32V17H7Z" fill="#fff9e9"/><circle cx="-23" cy="10" r="8" fill="#365650"/><circle cx="20" cy="4" r="9" fill="#365650"/>',
+  '<path d="M-24 -24L24 24M24 -24L-24 24" stroke="#e7bd78" stroke-width="8"/>',
+  '<path d="M-15 -15H15V20H-15Z" fill="#e7bd78" stroke="none"/><path d="M-14 -3H14M-14 9H14" stroke-width="5"/>',
+  '<path d="M-51 -53H51V17H-51Z" fill="#c5d9d5"/><path d="M0 -53V17M-13 -32V-6M13 -32V-6" fill="none" stroke-width="4"/>',
+  '<path d="M-22 -16H22V11H-22Z" fill="#e7bd78"/><circle r="6" fill="#fff9e9"/>',
+  '<path d="M-20 -45H-4V27H-20Z" fill="#fff9e9" stroke="none"/><path d="M26 -44H41V27H26Z" fill="#fff9e9" stroke="none"/>',
+  '<path d="M-27 -21H27V28H-27Z" fill="#9b8bbc" stroke="none"/><circle cy="4" r="19" fill="#e7bd78"/><path d="M-10 4H10M0 -6V14" stroke-width="4"/>',
+  '<path d="M-12 -30H12V-7H-12Z" fill="#88a3b5" stroke="none"/><path d="M-21 -14H21M-21 -3H21M-17 8H17" fill="none" stroke-width="5"/>',
+  '<ellipse rx="34" ry="25" fill="#8b9290"/><circle r="8" fill="#fff9e9"/>',
+  '<path d="M-50 -12H49V12H-50Z" fill="#c78b89"/><circle cx="-30" r="9" fill="#fff9e9"/><circle r="9" fill="#fff9e9"/><circle cx="30" r="9" fill="#fff9e9"/>',
+  '<path d="M-26 -11H26V31H-26Z" fill="#e7bd78" stroke="none"/><circle cy="10" r="20" fill="#fff9e9"/><path d="M0 -4Q-19 14 0 24Q19 14 0 -4Z" fill="#365650" stroke="none"/>'
+ ];
+ if(index===0)return '<rect x="-35" y="-27" width="70" height="54" rx="9" fill="#dfbf94"/><rect x="-28" y="-19" width="56" height="33" rx="3" fill="#fff9e9" stroke-width="2"/><text x="0" y="5" text-anchor="middle" font-family="monospace" font-size="20" font-weight="bold" fill="#365650" stroke="none">8:30</text><circle cx="-10" cy="21" r="2"/><circle cx="10" cy="21" r="2"/>';
+ return art+additions[index];
 }
 export function finalRoomObjects(scene){
  return Object.fromEntries(extraKeys.map((key,i)=>{
@@ -272,8 +292,9 @@ export function finalRoom(s){
   const [x,y,,,scale]=layouts[s.scene][i];
   const changed=s[extraKeys[i]];
   const transform=variantTransform(s.scene,i,changed);
-  const detail=propDetails[s.scene][i];
-  return `<g transform="translate(${x} ${y}) scale(${scale})"><g transform="${transform}">${art}<g fill="none" stroke-width="1.3">${detail}</g></g></g>`;
+  const detail=s.scene==='garage'&&changed&&i===0?'':propDetails[s.scene][i];
+  const variant=s.scene==='garage'&&changed?garageVariant(i,art):art;
+  return `<g transform="translate(${x} ${y}) scale(${scale})"><g transform="${transform}">${variant}<g fill="none" stroke-width="1.3">${detail}</g></g></g>`;
  }).join('');
  return `<svg class="room-art" viewBox="0 0 800 520" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Illustrated ${room.title}">
  <rect width="800" height="520" fill="${room.wall}"/>

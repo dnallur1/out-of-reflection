@@ -20,6 +20,7 @@ function roomSpots(scene){
   layout[6]=[floor.x,floor.y,62,floor.height];
   layout[3]=[688,287,96,110];
   layout[4]=[484,310,100,80];
+  layout[10]=[644,425,132,90]; // Enlarged sack rests on the floor beneath the right bench.
   layout[9]=[137*gardenSeatScale,445+(378-445)*gardenSeatScale,98*gardenSeatScale,70*gardenSeatScale];
  }
  if(scene==='study'){
@@ -200,6 +201,6 @@ export function extraRoom(s){
   <path d="M-22-21H22" fill="none"/>
  </g>
  </g>`:''}
- ${extraKeys.map((key,i)=>i===6?'':`<g transform="translate(${layout[i][0]} ${layout[i][1]})">${greenhouse&&i===9?`<g transform="scale(${gardenSeatScale})">${features[i]}</g>`:features[i]}${details[i]}</g>`).join('')}
+ ${extraKeys.map((key,i)=>i===6?'':`<g transform="translate(${layout[i][0]} ${layout[i][1]})">${greenhouse&&i===10?`<g transform="translate(0 29) scale(1.4) translate(0 -29)">${features[i]}${details[i]}</g>`:`${greenhouse&&i===9?`<g transform="scale(${gardenSeatScale})">${features[i]}</g>`:features[i]}${details[i]}`}</g>`).join('')}
  </g>${marks('<path d="M18 389h28M744 375h32M230 72l4 -2M239 79l3 1"/>')}</svg>`;
 }

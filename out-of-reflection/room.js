@@ -1,5 +1,5 @@
-import {finalRoom,finalRoomObjects} from './final-rooms.js?v=garage-level-seven-1';
-import {extraRoom,extraRoomObjects} from './extra-rooms.js?v=garage-level-seven-1';
+import {finalRoom,finalRoomObjects} from './final-rooms.js?v=clear-garage-clock-2';
+import {extraRoom,extraRoomObjects} from './extra-rooms.js?v=compost-on-floor-1';
 import {polishRoom} from './art-details.js?v=garage-level-seven-1';
 import {otherRoom,otherObjects} from './other-rooms.js?v=garage-level-seven-1';
 export const objects={

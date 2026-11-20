@@ -1,10 +1,11 @@
 import {clues} from './hints.mjs?v=seven-levels-1';
 import {initialState,reflected,select,remaining,TOTAL,stageIndex,stageProgress,STAGE_COUNTS,advance,WRONG_ALLOWANCE,retryRoom} from './game-state.mjs?v=seven-levels-1';
-import {drawRoom,roomObjects} from './room.js?v=seven-levels-1';
+import {drawRoom,roomObjects} from './room.js?v=compost-on-floor-1';
 const $=id=>document.getElementById(id);
 const localPreview=['127.0.0.1','localhost','[::1]'].includes(location.hostname);
 const reviewMode=localPreview&&new URLSearchParams(location.search).get('review')==='1';
-let state=initialState(),busy=false,soundOn=true,audio,feedbackTimer;
+let state=initialState(),busy=false,soundOn=true,audio,feedbackTimer,completionTimer;
+let completionPending=false;
 let reviewDifferences=true;
 let reviewMonochrome=new URLSearchParams(location.search).get('monochrome')==='1';
 const roomNames=['Living room','Kitchen','Bedroom','Study','Greenhouse','Attic','Garage'];
@@ -30,11 +31,11 @@ const stageCopy = [
  ['Look for what shifted', 'Compare where small details sit on larger objects. You have two and a half minutes.'],
  ['Judge the size', 'Judge scale using nearby edges. Finds resize details in the room itself. You have two minutes.'],
  ['Trust your proportions', 'Compare small details and proportions in the hazier mirror. You have ninety seconds.'],
- ['One minute. Look closer.', 'Compare the positions, sizes and angles of the garage details. You have one minute.'],
+ ['One minute. Look closer.', 'Compare the markings, patterns and details of the garage objects. You have one minute.'],
 ];
 const mirrorPrompt = $('mirror-prompt');
 document.querySelector('.journey').innerHTML=STAGE_COUNTS.map((_,i)=>`<li data-stage="${i}">Level ${i+1}</li>`).join('');
-function cue(kind){if(!soundOn)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();const t=audio.currentTime;for(const [freq,duration,volume] of kind==='wrong'?[[260,.22,.055],[196,.3,.035]]:kind==='end'?[[523,.8,.05],[659,.8,.03]]:[[660,.35,.05],[667,.5,.02]]){const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;g.gain.setValueAtTime(volume,t);g.gain.exponentialRampToValueAtTime(.001,t+duration);o.connect(g).connect(audio.destination);o.start(t);o.stop(t+duration);}}catch{soundOn=false;$('sound').textContent='Sound unavailable';}}
+function cue(kind,delay=0){if(!soundOn)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();const t=audio.currentTime+delay;const notes=kind==='success'?[[784,.2,.035,0],[988,.22,.03,.11],[1175,.32,.025,.22]]:kind==='wrong'?[[260,.22,.055],[196,.3,.035]]:kind==='end'?[[523,.25,.035,0],[659,.25,.035,.14],[784,.28,.035,.28],[1047,.7,.04,.44],[784,.7,.018,.44]]:[[660,.35,.05],[667,.5,.02]];for(const [freq,duration,volume,offset=0] of notes){const start=t+offset,o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;if(kind==='success'||kind==='end'){g.gain.setValueAtTime(0,start);g.gain.linearRampToValueAtTime(volume,start+.012);}else g.gain.setValueAtTime(volume,start);g.gain.exponentialRampToValueAtTime(.001,start+duration);o.connect(g).connect(audio.destination);o.start(start);o.stop(start+duration);}}catch{soundOn=false;$('sound').textContent='Sound unavailable';}}
 function render(){
  const objects=roomObjects(state.room.scene);
  const level=stageIndex(state)+1,roomName=roomNames[level-1];
@@ -77,7 +78,7 @@ function render(){
  mirrorPrompt.textContent=reviewMode?(reviewDifferences?'Differences shown':'Matching view'):'Look closely';
  mirrorPrompt.classList.remove('reflection-changed');
  $('hint').disabled=!state.started||roomComplete()||state.failed||busy;
- $('stage-complete').hidden=!roomComplete()||state.found===TOTAL;
+ $('stage-complete').hidden=completionPending||!roomComplete()||state.found===TOTAL;
  $('status').hidden=roomComplete();
  if(roomComplete()&&state.found<TOTAL){
   $('complete-title').textContent=`${roomName} complete!`;
@@ -142,9 +143,17 @@ function clickObject(key,view){
  busy=true;button.classList.add('correct');cue('correct');$('hint').disabled=true;
  for(const b of document.querySelectorAll('.target'))b.disabled=true;
  $('status').textContent='Difference found.';
- feedbackTimer=setTimeout(()=>{state=result.state;busy=false;render();celebrateDiscovery(key);$('hint-text').textContent='Need a nudge? Ask for a short clue.';
- if(state.found===TOTAL){$('ending-details').textContent=`You made ${TOTAL} discoveries across ${roomNames.length} rooms.`;$('ending').hidden=false;$('status').textContent='All differences found. Full colour has returned to the room.';cue('end');$('inspect').focus();}
- else if(roomComplete()){$('status').textContent='';cue('end');$('continue').focus({preventScroll:true});}
+ feedbackTimer=setTimeout(()=>{state=result.state;busy=false;completionPending=roomComplete();render();celebrateDiscovery(key);cue('success');$('hint-text').textContent='Need a nudge? Ask for a short clue.';
+ if(roomComplete()){
+  $('status').textContent='';cue('end',.55);
+  const completedState=state;
+  completionTimer=setTimeout(()=>{
+   if(state!==completedState)return;
+   completionPending=false;
+   if(state.found===TOTAL){$('ending-details').textContent=`You made ${TOTAL} discoveries across ${roomNames.length} rooms.`;$('ending').hidden=false;$('inspect').focus();}
+   else {$('stage-complete').hidden=false;$('continue').focus({preventScroll:true});$('stage-complete').scrollIntoView({block:'nearest',behavior:'instant'});}
+  },3000);
+ }
  else {
   mirrorPrompt.textContent='Compare again';
   mirrorPrompt.classList.add('reflection-changed');
@@ -171,7 +180,7 @@ $('begin').addEventListener('click',()=>{
  render();
  $('game-title').focus();
 });
-function restart(){ $('outcome').hidden=true; $('outcome-rooms').replaceChildren(); clearTimeout(feedbackTimer);busy=false;state=initialState();resetTimer();clearWarning();showOpening(true);$('ending').hidden=true;$('final-note').hidden=true;$('status').textContent='Begin when you’re ready. The first rooms have no timer.';$('hint-text').textContent='Need a nudge? Ask for a short clue.';render();$('begin').focus();}
+function restart(){ $('outcome').hidden=true; $('outcome-rooms').replaceChildren(); clearTimeout(feedbackTimer);clearTimeout(completionTimer);completionPending=false;busy=false;state=initialState();resetTimer();clearWarning();showOpening(true);$('ending').hidden=true;$('final-note').hidden=true;$('status').textContent='Begin when you’re ready. The first rooms have no timer.';$('hint-text').textContent='Need a nudge? Ask for a short clue.';render();$('begin').focus();}
 $('retry-room').addEventListener('click',()=>{
  clearTimeout(feedbackTimer);busy=false;state=retryRoom(state);resetTimer();clearWarning();render();
  $('hint-text').textContent='Need a nudge? Ask for a short clue.';
@@ -195,7 +204,7 @@ $('inspect').addEventListener('click',()=>{
 });
 $('outcome-replay').addEventListener('click',restart);
 $('hint').addEventListener('click',()=>{if(!state.started||busy||state.failed||roomComplete())return;const key=remaining(state)[0];$('hint-text').textContent=state.stage>=6
- ? `Compare the position, size and angle of the ${roomObjects(state.room.scene)[key].name}.`
+ ? `Compare the markings and details of the ${roomObjects(state.room.scene)[key].name}.`
  : clues[`${state.room.scene}_${key}`]??clues[key];});
 $('help-open').addEventListener('click',()=>{$('help-dialog').showModal();});
 $('sound').addEventListener('click',()=>{soundOn=!soundOn;$('sound').textContent=soundOn?'Sound on':'Sound off';$('sound').setAttribute('aria-pressed',String(soundOn));if(soundOn)cue('correct');});
@@ -243,8 +252,7 @@ function fitBoard(){
  }
  const viewportHeight=window.visualViewport?.height||window.innerHeight;
  const boardTop=board.getBoundingClientRect().top+window.scrollY;
- const completionHeight=$('stage-complete').hidden?0:$('stage-complete').getBoundingClientRect().height+20;
- const statusReserve=Math.max(42,$('status').getBoundingClientRect().height+20)+completionHeight;
+ const statusReserve=Math.max(42,$('status').getBoundingClientRect().height+20);
  const headerHeight=document.querySelector('.scene-panel>h2').getBoundingClientRect().height+2;
  const minimumWidth=Math.min(area.clientWidth,480);
  const side=Math.floor(Math.min(area.clientWidth,Math.max(minimumWidth,(viewportHeight-boardTop-statusReserve-headerHeight)*(1600/520))));
